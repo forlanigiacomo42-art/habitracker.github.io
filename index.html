@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="FocusOS" />
-  <title>FocusOS — Abitudini & Studio</title>
+  <title>FocusOS — Abitudini, Calendario & Studio</title>
   <style>
     :root {
       --bg-primary: #F2F2F7;
@@ -49,7 +49,7 @@
     body {
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      padding-bottom: 100px;
+      padding-bottom: 105px;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -67,7 +67,7 @@
     }
 
     .header-container {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -89,7 +89,7 @@
     }
 
     main {
-      max-width: 900px;
+      max-width: 920px;
       margin: 20px auto;
       padding: 0 16px;
     }
@@ -165,9 +165,9 @@
       margin-bottom: 20px;
     }
 
-    @media (max-width: 680px) {
-      .charts-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 720px) {
+      .charts-grid, .calendar-layout {
+        grid-template-columns: 1fr !important;
       }
     }
 
@@ -296,10 +296,11 @@
     .ios-check {
       appearance: none;
       -webkit-appearance: none;
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
       border-radius: 50%;
-      border: 2px solid rgba(142, 142, 147, 0.4);
+      border: 2px solid rgba(142, 142, 147, 0.45);
       cursor: pointer;
       position: relative;
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -317,8 +318,8 @@
 
     .ios-check:checked::after {
       content: "";
-      width: 6px;
-      height: 11px;
+      width: 5px;
+      height: 10px;
       border: solid white;
       border-width: 0 2.2px 2.2px 0;
       transform: rotate(45deg);
@@ -340,7 +341,7 @@
       border: none;
       color: var(--text-secondary);
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       margin-left: 8px;
       opacity: 0.5;
       transition: opacity 0.2s;
@@ -351,15 +352,15 @@
       color: var(--red);
     }
 
-    /* Add Habit Form */
+    /* Inputs & Buttons */
     .add-row {
       display: flex;
       gap: 10px;
       margin-top: 16px;
+      flex-wrap: wrap;
     }
 
-    .ios-input {
-      flex: 1;
+    .ios-input, .ios-select {
       padding: 10px 14px;
       border-radius: 10px;
       border: 1px solid var(--separator);
@@ -369,7 +370,12 @@
       outline: none;
     }
 
-    .ios-input:focus {
+    .ios-input {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .ios-input:focus, .ios-select:focus {
       border-color: var(--blue);
     }
 
@@ -392,6 +398,202 @@
     .ios-btn.secondary {
       background: rgba(118, 118, 128, 0.16);
       color: var(--text-primary);
+    }
+
+    .ios-btn.small {
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    /* --- PAGINA CALENDARIO & SCADENZE --- */
+    .calendar-layout {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cal-nav-btn {
+      background: rgba(118, 118, 128, 0.12);
+      border: none;
+      color: var(--blue);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--separator);
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      position: relative;
+      transition: background 0.15s ease, transform 0.1s ease;
+      user-select: none;
+    }
+
+    .cal-day:hover {
+      background: rgba(118, 118, 128, 0.1);
+    }
+
+    .cal-day.empty {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cal-day.today {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .cal-day.selected {
+      background: var(--blue);
+      color: #FFFFFF !important;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(0, 122, 255, 0.3);
+    }
+
+    .cal-dots {
+      display: flex;
+      gap: 3px;
+      margin-top: 3px;
+      height: 5px;
+    }
+
+    .cal-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .cal-day.selected .cal-dot {
+      background: #FFFFFF !important;
+    }
+
+    /* Lista Eventi & Scadenze */
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .event-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--blue);
+      gap: 10px;
+    }
+
+    .event-item.type-scadenza {
+      border-left-color: var(--red);
+    }
+
+    .event-item.type-esame {
+      border-left-color: var(--purple);
+    }
+
+    .event-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .event-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .event-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .event-title.done {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge.impegno {
+      background: rgba(0, 122, 255, 0.14);
+      color: var(--blue);
+    }
+
+    .badge.scadenza {
+      background: rgba(255, 59, 48, 0.14);
+      color: var(--red);
+    }
+
+    .badge.esame {
+      background: rgba(175, 82, 222, 0.14);
+      color: var(--purple);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px 12px;
+      color: var(--text-secondary);
+      font-size: 14px;
     }
 
     /* STUDIO - POMODORO PAGE */
@@ -510,14 +712,14 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 76px;
+      height: 78px;
       background: var(--bg-glass);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
       border-top: 1px solid var(--separator);
       display: flex;
       justify-content: center;
-      gap: 60px;
+      gap: 48px;
       padding-bottom: env(safe-area-inset-bottom);
       z-index: 100;
     }
@@ -535,11 +737,12 @@
       font-size: 11px;
       font-weight: 600;
       transition: color 0.2s ease, transform 0.15s ease;
+      min-width: 64px;
     }
 
     .tab-item svg {
-      width: 25px;
-      height: 25px;
+      width: 24px;
+      height: 24px;
       fill: currentColor;
     }
 
@@ -567,17 +770,13 @@
   <main>
     <!-- PAGINA 1: ABITUDINI E OBIETTIVI -->
     <section id="page-habits" class="page active">
-      
-      <!-- Selettore Giorno / Settimana / Mese -->
       <div class="segmented-control">
         <button class="segment-btn active" onclick="switchPeriod('daily', this)">Giorno (Lun-Dom)</button>
         <button class="segment-btn" onclick="switchPeriod('weekly', this)">Settimana (1-4)</button>
         <button class="segment-btn" onclick="switchPeriod('monthly', this)">Mese (Obiettivi)</button>
       </div>
 
-      <!-- Grafici (Anelli + Istogramma) -->
       <div class="charts-grid">
-        <!-- Anelli Apple Fitness -->
         <div class="card" style="margin-bottom: 0;">
           <div class="card-header">
             <span class="card-title">Riepilogo Totale</span>
@@ -610,7 +809,6 @@
           </div>
         </div>
 
-        <!-- Grafico a Barre Dinamico -->
         <div class="card" style="margin-bottom: 0;">
           <div class="card-header">
             <span class="card-title" id="barChartTitle">Andamento Giornaliero</span>
@@ -619,7 +817,6 @@
         </div>
       </div>
 
-      <!-- Tabella con le Spunte -->
       <div class="card">
         <div class="card-header">
           <span class="card-title" id="tableTitle">Tracciamento Giornaliero</span>
@@ -631,7 +828,6 @@
           </table>
         </div>
 
-        <!-- Aggiungi Nuova Abitudine/Obiettivo -->
         <div class="add-row">
           <input type="text" id="newHabitInput" class="ios-input" placeholder="Aggiungi nuova abitudine o obiettivo..." onkeydown="if(event.key==='Enter') addHabit()" />
           <button class="ios-btn" onclick="addHabit()">+ Aggiungi</button>
@@ -639,7 +835,67 @@
       </div>
     </section>
 
-    <!-- PAGINA 2: STUDIO (POMODORO) -->
+    <!-- PAGINA 2: CALENDARIO, IMPEGNI & SCADENZE -->
+    <section id="page-calendar" class="page">
+      <div class="calendar-layout">
+        <!-- Colonna Sinistra: Griglia Mese -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title" id="calMonthYear">Mese Anno</span>
+            <div class="cal-nav">
+              <button class="ios-btn secondary small" onclick="goToToday()">Oggi</button>
+              <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+              <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+            </div>
+          </div>
+
+          <div class="cal-weekdays">
+            <div>LUN</div><div>MAR</div><div>MER</div><div>GIO</div><div>VEN</div><div>SAB</div><div>DOM</div>
+          </div>
+          <div class="cal-grid" id="calendarGrid"></div>
+        </div>
+
+        <!-- Colonna Destra: Eventi del Giorno Selezionato -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title" id="selectedDayTitle">Impegni del Giorno</span>
+            </div>
+
+            <div id="dayEventsList" class="event-list"></div>
+
+            <!-- Form Aggiungi Impegno / Scadenza -->
+            <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--separator);">
+              <div style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px;">
+                NUOVO IMPEGNO O SCADENZA
+              </div>
+              <div class="add-row" style="margin-top: 0;">
+                <input type="text" id="eventTitleInput" class="ios-input" placeholder="Es. Consegna progetto, Esame..." onkeydown="if(event.key==='Enter') addCalendarEvent()" />
+              </div>
+              <div class="add-row" style="margin-top: 10px;">
+                <input type="time" id="eventTimeInput" class="ios-select" style="flex: 1;" />
+                <select id="eventTypeInput" class="ios-select" style="flex: 1.4;">
+                  <option value="impegno">🔵 Impegno</option>
+                  <option value="scadenza">🔴 Scadenza</option>
+                  <option value="esame">🟣 Esame / Studio</option>
+                </select>
+                <button class="ios-btn" onclick="addCalendarEvent()">+ Aggiungi</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Riepilogo Prossime Scadenze -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Prossime Scadenze & Impegni</span>
+            </div>
+            <div id="upcomingEventsList" class="event-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGINA 3: STUDIO (POMODORO) -->
     <section id="page-studio" class="page">
       <div class="card">
         <div class="segmented-control">
@@ -669,7 +925,6 @@
             Pomodori completati oggi: <strong id="pomodoroCount" style="color: var(--text-primary);">0</strong> 🍅
           </p>
 
-          <!-- Personalizzazione Minuti -->
           <div class="pomodoro-settings">
             <div class="setting-box">
               <label>Studio (min)</label>
@@ -689,13 +944,19 @@
     </section>
   </main>
 
-  <!-- BARRA IN BASSO (TAB BAR) -->
+  <!-- BARRA IN BASSO (TAB BAR A 3 SEZIONI) -->
   <nav class="tab-bar">
     <button class="tab-item active" onclick="switchTab('habits', this)">
       <svg viewBox="0 0 24 24">
         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
       </svg>
       <span>Obiettivi</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('calendar', this)">
+      <svg viewBox="0 0 24 24">
+        <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+      </svg>
+      <span>Calendario</span>
     </button>
     <button class="tab-item" onclick="switchTab('studio', this)">
       <svg viewBox="0 0 24 24">
@@ -706,6 +967,17 @@
   </nav>
 
   <script>
+    // --- HELPER DATE ---
+    function toISODate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    const todayDate = new Date();
+    const todayISO = toISODate(todayDate);
+
     // --- STATO INIZIALE & SALVATAGGIO ---
     const defaultData = {
       daily: {
@@ -733,19 +1005,27 @@
           { name: "Risparmiare obiettivo mensile", checks: [true] }
         ]
       },
+      events: {
+        [todayISO]: [
+          { id: 1, title: "Sessione di studio intensiva", time: "15:00", type: "esame", done: false },
+          { id: 2, title: "Consegna report settimanale", time: "18:30", type: "scadenza", done: false }
+        ]
+      },
       pomodorosCompleted: 0
     };
 
-    let appData = JSON.parse(localStorage.getItem("focusOS_data")) || defaultData;
+    let appData = JSON.parse(localStorage.getItem("focusOS_v2_data")) || defaultData;
+    if (!appData.events) appData.events = {};
+
     let currentPeriod = "daily";
 
     function saveData() {
-      localStorage.setItem("focusOS_data", JSON.stringify(appData));
+      localStorage.setItem("focusOS_v2_data", JSON.stringify(appData));
     }
 
-    // --- IMPOSTAZIONE DATA ---
-    const options = { weekday: 'long', day: 'numeric', month: 'long' };
-    document.getElementById("currentDateLabel").textContent = new Date().toLocaleDateString('it-IT', options);
+    // --- IMPOSTAZIONE DATA HEADER ---
+    const headerDateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+    document.getElementById("currentDateLabel").textContent = todayDate.toLocaleDateString('it-IT', headerDateOptions);
 
     // --- NAVIGAZIONE TAB BAR ---
     function switchTab(tab, btn) {
@@ -756,13 +1036,17 @@
       if (tab === "habits") {
         document.getElementById("page-habits").classList.add("active");
         document.getElementById("pageTitle").textContent = "Obiettivi & Abitudini";
+      } else if (tab === "calendar") {
+        document.getElementById("page-calendar").classList.add("active");
+        document.getElementById("pageTitle").textContent = "Calendario & Scadenze";
+        renderCalendarAll();
       } else {
         document.getElementById("page-studio").classList.add("active");
         document.getElementById("pageTitle").textContent = "Studio & Pomodoro";
       }
     }
 
-    // --- CAMBIO PERIODO (GIORNO / SETTIMANA / MESE) ---
+    // --- LOGICA ABITUDINI & GRAFICI ---
     function switchPeriod(period, btn) {
       currentPeriod = period;
       document.querySelectorAll("#page-habits .segment-btn").forEach(el => el.classList.remove("active"));
@@ -784,7 +1068,6 @@
       renderAll();
     }
 
-    // --- RENDERING TABELLA E GRAFICI ---
     function renderAll() {
       renderTable();
       renderRings();
@@ -797,239 +1080,4 @@
       const thead = document.getElementById("tableHead");
       const tbody = document.getElementById("tableBody");
 
-      // Header
-      let headHTML = `<tr><th>Abitudine / Obiettivo</th>`;
-      section.columns.forEach(col => {
-        headHTML += `<th>${col}</th>`;
-      });
-      headHTML += `<th>Progresso</th></tr>`;
-      thead.innerHTML = headHTML;
-
-      // Body
-      tbody.innerHTML = "";
-      section.items.forEach((item, rowIndex) => {
-        const doneCount = item.checks.filter(Boolean).length;
-        const pct = Math.round((doneCount / section.columns.length) * 100);
-
-        let rowHTML = `<tr>
-          <td>
-            ${item.name}
-            <button class="delete-btn" title="Elimina" onclick="deleteHabit(${rowIndex})">✕</button>
-          </td>`;
-
-        item.checks.forEach((checked, colIndex) => {
-          rowHTML += `<td>
-            <input type="checkbox" class="ios-check" ${checked ? "checked" : ""} 
-              onchange="toggleCheck(${rowIndex}, ${colIndex})" />
-          </td>`;
-        });
-
-        rowHTML += `<td><span class="progress-pill">${pct}%</span></td></tr>`;
-        tbody.innerHTML += rowHTML;
-      });
-    }
-
-    function toggleCheck(rowIndex, colIndex) {
-      const item = appData[currentPeriod].items[rowIndex];
-      item.checks[colIndex] = !item.checks[colIndex];
-      saveData();
-      renderAll();
-    }
-
-    function addHabit() {
-      const input = document.getElementById("newHabitInput");
-      const name = input.value.trim();
-      if (!name) return;
-
-      const colsCount = appData[currentPeriod].columns.length;
-      appData[currentPeriod].items.push({
-        name: name,
-        checks: new Array(colsCount).fill(false)
-      });
-
-      input.value = "";
-      saveData();
-      renderAll();
-    }
-
-    function deleteHabit(index) {
-      appData[currentPeriod].items.splice(index, 1);
-      saveData();
-      renderAll();
-    }
-
-    function calcPeriodPercentage(periodKey) {
-      const section = appData[periodKey];
-      if (!section.items.length) return 0;
-      let total = 0;
-      let checked = 0;
-      section.items.forEach(item => {
-        item.checks.forEach(val => {
-          total++;
-          if (val) checked++;
-        });
-      });
-      return total === 0 ? 0 : Math.round((checked / total) * 100);
-    }
-
-    function renderRings() {
-      const circumference = 201; // 2 * PI * 32
-      ["daily", "weekly", "monthly"].forEach(key => {
-        const pct = calcPeriodPercentage(key);
-        const offset = circumference - (pct / 100) * circumference;
-        document.getElementById(`ring-${key}`).style.strokeDashoffset = offset;
-        document.getElementById(`ring-${key}-val`).textContent = `${pct}%`;
-      });
-    }
-
-    function renderBarChart() {
-      const container = document.getElementById("barChartContainer");
-      const section = appData[currentPeriod];
-      container.innerHTML = "";
-
-      section.columns.forEach((colName, colIndex) => {
-        let totalRows = section.items.length;
-        let doneInCol = 0;
-        section.items.forEach(item => {
-          if (item.checks[colIndex]) doneInCol++;
-        });
-        const pct = totalRows === 0 ? 0 : Math.round((doneInCol / totalRows) * 100);
-
-        container.innerHTML += `
-          <div class="bar-col">
-            <div class="bar-track">
-              <div class="bar-fill" style="height: ${pct}%"></div>
-            </div>
-            <span class="bar-day">${colName}</span>
-          </div>
-        `;
-      });
-    }
-
-    // --- LOGICA STUDIO / POMODORO TIMER ---
-    let timerMode = "work"; // 'work' | 'short' | 'long'
-    let durations = { work: 25, short: 5, long: 15 };
-    let totalSeconds = durations.work * 60;
-    let remainingSeconds = totalSeconds;
-    let timerInterval = null;
-    let isRunning = false;
-
-    function updateDurations() {
-      durations.work = Math.max(1, parseInt(document.getElementById("inputWork").value) || 25);
-      durations.short = Math.max(1, parseInt(document.getElementById("inputShort").value) || 5);
-      durations.long = Math.max(1, parseInt(document.getElementById("inputLong").value) || 15);
-      if (!isRunning) {
-        setPomodoroMode(timerMode);
-      }
-    }
-
-    function setPomodoroMode(mode) {
-      pauseTimer();
-      timerMode = mode;
-      document.querySelectorAll("#page-studio .segment-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById(`mode-${mode}`).classList.add("active");
-
-      totalSeconds = durations[mode] * 60;
-      remainingSeconds = totalSeconds;
-
-      const ring = document.getElementById("timerRing");
-      const status = document.getElementById("timerStatus");
-
-      if (mode === "work") {
-        ring.style.stroke = "var(--orange)";
-        status.textContent = "Sessione di Concentrazione";
-      } else if (mode === "short") {
-        ring.style.stroke = "var(--green)";
-        status.textContent = "Pausa Breve Rilassante";
-      } else {
-        ring.style.stroke = "var(--blue)";
-        status.textContent = "Pausa Lunga Rigenerante";
-      }
-
-      updateTimerUI();
-    }
-
-    function toggleTimer() {
-      if (isRunning) {
-        pauseTimer();
-      } else {
-        startTimer();
-      }
-    }
-
-    function startTimer() {
-      isRunning = true;
-      document.getElementById("startPauseBtn").textContent = "Pausa";
-      timerInterval = setInterval(() => {
-        if (remainingSeconds > 0) {
-          remainingSeconds--;
-          updateTimerUI();
-        } else {
-          completePomodoroSession();
-        }
-      }, 1000);
-    }
-
-    function pauseTimer() {
-      isRunning = false;
-      clearInterval(timerInterval);
-      document.getElementById("startPauseBtn").textContent = "Avvia";
-    }
-
-    function resetTimer() {
-      pauseTimer();
-      remainingSeconds = totalSeconds;
-      updateTimerUI();
-    }
-
-    function updateTimerUI() {
-      const mins = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
-      const secs = (remainingSeconds % 60).toString().padStart(2, "0");
-      document.getElementById("timerDigits").textContent = `${mins}:${secs}`;
-
-      const circumference = 728.8; // 2 * PI * 116
-      const progress = (totalSeconds - remainingSeconds) / totalSeconds;
-      document.getElementById("timerRing").style.strokeDashoffset = circumference * progress;
-    }
-
-    function playAppleChime() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const notes = [523.25, 659.25, 783.99, 1046.5]; // Accordo Do Maggiore
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.12);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.6);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.12);
-          osc.stop(ctx.currentTime + idx * 0.12 + 0.6);
-        });
-      } catch (e) {}
-    }
-
-    function completePomodoroSession() {
-      pauseTimer();
-      playAppleChime();
-
-      if (timerMode === "work") {
-        appData.pomodorosCompleted = (appData.pomodorosCompleted || 0) + 1;
-        saveData();
-        document.getElementById("pomodoroCount").textContent = appData.pomodorosCompleted;
-        alert("Ottimo lavoro! Sessione di studio conclusa. È il momento di una pausa!");
-        setPomodoroMode("short");
-      } else {
-        alert("Pausa terminata! Pronto per ricominciare a studiare?");
-        setPomodoroMode("work");
-      }
-    }
-
-    // Avvio iniziale
-    renderAll();
-    updateTimerUI();
-  </script>
-</body>
-</html>
+      let headHTML = `<tr><th>Abitudine / Obiettivo</th>
