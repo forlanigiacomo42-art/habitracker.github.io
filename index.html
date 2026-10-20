@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="FocusOS" />
+  <title>FocusOS — Abitudini & Studio</title>
+  <style>
+    :root {
+      --bg-primary: #F2F2F7;
+      --bg-card: #FFFFFF;
+      --bg-glass: rgba(255, 255, 255, 0.78);
+      --text-primary: #1C1C1E;
+      --text-secondary: #8E8E93;
+      --separator: rgba(60, 60, 67, 0.12);
+      --blue: #007AFF;
+      --green: #34C759;
+      --orange: #FF9500;
+      --red: #FF3B30;
+      --purple: #AF52DE;
+      --teal: #5AC8FA;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #000000;
+        --bg-card: #1C1C1E;
+        --bg-glass: rgba(28, 28, 30, 0.82);
+        --text-primary: #FFFFFF;
+        --text-secondary: #98989D;
+        --separator: rgba(255, 255, 255, 0.14);
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      padding-bottom: 100px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Header iOS Style */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg-glass);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--separator);
+      padding: 16px 24px 12px;
+    }
+
+    .header-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+    }
+
+    .date-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 0.4px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Segmented Control iOS */
+    .segmented-control {
+      display: flex;
+      background: rgba(118, 118, 128, 0.12);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 20px;
+    }
+
+    .segment-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .segment-btn.active {
+      background: var(--bg-card);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Card Component */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 680px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Ring Charts (Apple Fitness Style) */
+    .rings-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 12px;
+      padding: 8px 0;
+    }
+
+    .ring-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ring-svg {
+      width: 78px;
+      height: 78px;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: var(--separator);
+      stroke-width: 8;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .ring-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .ring-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Bar Chart */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 130px;
+      padding-top: 16px;
+      gap: 10px;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .bar-track {
+      width: 100%;
+      max-width: 28px;
+      height: 100%;
+      background: rgba(118, 118, 128, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 100%;
+      background: linear-gradient(180deg, var(--blue), var(--teal));
+      border-radius: 8px;
+      transition: height 0.4s ease;
+    }
+
+    .bar-day {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Table with Checkboxes */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 520px;
+    }
+
+    th, td {
+      padding: 12px 8px;
+      text-align: center;
+      border-bottom: 1px solid var(--separator);
+    }
+
+    th:first-child, td:first-child {
+      text-align: left;
+      padding-left: 4px;
+      font-weight: 500;
+      min-width: 170px;
+    }
+
+    th {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    /* Custom Apple Checkbox */
+    .ios-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(142, 142, 147, 0.4);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ios-check:checked {
+      background-color: var(--green);
+      border-color: var(--green);
+      transform: scale(1.05);
+    }
+
+    .ios-check:checked::after {
+      content: "";
+      width: 6px;
+      height: 11px;
+      border: solid white;
+      border-width: 0 2.2px 2.2px 0;
+      transform: rotate(45deg);
+      margin-bottom: 2px;
+    }
+
+    .progress-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(0, 122, 255, 0.12);
+      color: var(--blue);
+      display: inline-block;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 16px;
+      margin-left: 8px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .delete-btn:hover {
+      opacity: 1;
+      color: var(--red);
+    }
+
+    /* Add Habit Form */
+    .add-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .ios-input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--separator);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .ios-input:focus {
+      border-color: var(--blue);
+    }
+
+    .ios-btn {
+      background: var(--blue);
+      color: #FFF;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .ios-btn:active {
+      transform: scale(0.97);
+    }
+
+    .ios-btn.secondary {
+      background: rgba(118, 118, 128, 0.16);
+      color: var(--text-primary);
+    }
+
+    /* STUDIO - POMODORO PAGE */
+    .pomodoro-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .timer-ring-box {
+      position: relative;
+      width: 270px;
+      height: 270px;
+      margin: 16px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-circle-bg {
+      fill: none;
+      stroke: var(--separator);
+      stroke-width: 10;
+    }
+
+    .timer-circle-prog {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s linear, stroke 0.3s ease;
+    }
+
+    .timer-display {
+      z-index: 2;
+    }
+
+    .timer-digits {
+      font-size: 56px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1.5px;
+    }
+
+    .timer-status {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .timer-controls .ios-btn {
+      min-width: 120px;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 14px;
+    }
+
+    .pomodoro-settings {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 460px;
+      margin-top: 10px;
+    }
+
+    .setting-box {
+      background: var(--bg-primary);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .setting-box label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .setting-box input {
+      width: 64px;
+      text-align: center;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--separator);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* Bottom Navigation Bar (Apple Tab Bar) */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      background: var(--bg-glass);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: 1px solid var(--separator);
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 100;
+    }
+
+    .tab-item {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: color 0.2s ease, transform 0.15s ease;
+    }
+
+    .tab-item svg {
+      width: 25px;
+      height: 25px;
+      fill: currentColor;
+    }
+
+    .tab-item.active {
+      color: var(--blue);
+    }
+
+    .tab-item:active {
+      transform: scale(0.92);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div class="header-container">
+      <div>
+        <div class="date-label" id="currentDateLabel">OGGI</div>
+        <h1 id="pageTitle">Obiettivi & Abitudini</h1>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- PAGINA 1: ABITUDINI E OBIETTIVI -->
+    <section id="page-habits" class="page active">
+      
+      <!-- Selettore Giorno / Settimana / Mese -->
+      <div class="segmented-control">
+        <button class="segment-btn active" onclick="switchPeriod('daily', this)">Giorno (Lun-Dom)</button>
+        <button class="segment-btn" onclick="switchPeriod('weekly', this)">Settimana (1-4)</button>
+        <button class="segment-btn" onclick="switchPeriod('monthly', this)">Mese (Obiettivi)</button>
+      </div>
+
+      <!-- Grafici (Anelli + Istogramma) -->
+      <div class="charts-grid">
+        <!-- Anelli Apple Fitness -->
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-header">
+            <span class="card-title">Riepilogo Totale</span>
+          </div>
+          <div class="rings-wrapper">
+            <div class="ring-item">
+              <svg class="ring-svg" viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="32"></circle>
+                <circle id="ring-daily" class="ring-progress" stroke="var(--red)" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"></circle>
+              </svg>
+              <span class="ring-value" id="ring-daily-val">0%</span>
+              <span class="ring-label">Giorno</span>
+            </div>
+            <div class="ring-item">
+              <svg class="ring-svg" viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="32"></circle>
+                <circle id="ring-weekly" class="ring-progress" stroke="var(--green)" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"></circle>
+              </svg>
+              <span class="ring-value" id="ring-weekly-val">0%</span>
+              <span class="ring-label">Settimana</span>
+            </div>
+            <div class="ring-item">
+              <svg class="ring-svg" viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="32"></circle>
+                <circle id="ring-monthly" class="ring-progress" stroke="var(--blue)" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"></circle>
+              </svg>
+              <span class="ring-value" id="ring-monthly-val">0%</span>
+              <span class="ring-label">Mese</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grafico a Barre Dinamico -->
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-header">
+            <span class="card-title" id="barChartTitle">Andamento Giornaliero</span>
+          </div>
+          <div class="bar-chart" id="barChartContainer"></div>
+        </div>
+      </div>
+
+      <!-- Tabella con le Spunte -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" id="tableTitle">Tracciamento Giornaliero</span>
+        </div>
+        <div class="table-wrapper">
+          <table id="habitsTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Aggiungi Nuova Abitudine/Obiettivo -->
+        <div class="add-row">
+          <input type="text" id="newHabitInput" class="ios-input" placeholder="Aggiungi nuova abitudine o obiettivo..." onkeydown="if(event.key==='Enter') addHabit()" />
+          <button class="ios-btn" onclick="addHabit()">+ Aggiungi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGINA 2: STUDIO (POMODORO) -->
+    <section id="page-studio" class="page">
+      <div class="card">
+        <div class="segmented-control">
+          <button class="segment-btn active" id="mode-work" onclick="setPomodoroMode('work')">Studio</button>
+          <button class="segment-btn" id="mode-short" onclick="setPomodoroMode('short')">Pausa Breve</button>
+          <button class="segment-btn" id="mode-long" onclick="setPomodoroMode('long')">Pausa Lunga</button>
+        </div>
+
+        <div class="pomodoro-container">
+          <div class="timer-ring-box">
+            <svg class="timer-svg" viewBox="0 0 260 260">
+              <circle class="timer-circle-bg" cx="130" cy="130" r="116"></circle>
+              <circle id="timerRing" class="timer-circle-prog" cx="130" cy="130" r="116" stroke-dasharray="728.8" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="timer-display">
+              <div class="timer-digits" id="timerDigits">25:00</div>
+              <div class="timer-status" id="timerStatus">Sessione di Concentrazione</div>
+            </div>
+          </div>
+
+          <div class="timer-controls">
+            <button class="ios-btn" id="startPauseBtn" onclick="toggleTimer()">Avvia</button>
+            <button class="ios-btn secondary" onclick="resetTimer()">Reset</button>
+          </div>
+
+          <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">
+            Pomodori completati oggi: <strong id="pomodoroCount" style="color: var(--text-primary);">0</strong> 🍅
+          </p>
+
+          <!-- Personalizzazione Minuti -->
+          <div class="pomodoro-settings">
+            <div class="setting-box">
+              <label>Studio (min)</label>
+              <input type="number" id="inputWork" value="25" min="1" max="120" onchange="updateDurations()" />
+            </div>
+            <div class="setting-box">
+              <label>Pausa Breve</label>
+              <input type="number" id="inputShort" value="5" min="1" max="60" onchange="updateDurations()" />
+            </div>
+            <div class="setting-box">
+              <label>Pausa Lunga</label>
+              <input type="number" id="inputLong" value="15" min="1" max="60" onchange="updateDurations()" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- BARRA IN BASSO (TAB BAR) -->
+  <nav class="tab-bar">
+    <button class="tab-item active" onclick="switchTab('habits', this)">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+      </svg>
+      <span>Obiettivi</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('studio', this)">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+      </svg>
+      <span>Studio</span>
+    </button>
+  </nav>
+
+  <script>
+    // --- STATO INIZIALE & SALVATAGGIO ---
+    const defaultData = {
+      daily: {
+        columns: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
+        items: [
+          { name: "Studiare 2 ore", checks: [true, true, false, true, false, false, false] },
+          { name: "Allenamento / Camminata", checks: [true, false, true, true, false, false, false] },
+          { name: "Lettura 20 pagine", checks: [true, true, true, false, false, false, false] },
+          { name: "Bere 2L d'acqua", checks: [true, true, true, true, false, false, false] }
+        ]
+      },
+      weekly: {
+        columns: ["Sett. 1", "Sett. 2", "Sett. 3", "Sett. 4"],
+        items: [
+          { name: "Ripasso generale esami", checks: [true, true, false, false] },
+          { name: "3 sessioni di sport completate", checks: [true, false, false, false] },
+          { name: "Pianificazione spesa e budget", checks: [true, true, false, false] }
+        ]
+      },
+      monthly: {
+        columns: ["Stato Mese"],
+        items: [
+          { name: "Finire libro del mese", checks: [false] },
+          { name: "Consegnare progetto universitario", checks: [true] },
+          { name: "Risparmiare obiettivo mensile", checks: [true] }
+        ]
+      },
+      pomodorosCompleted: 0
+    };
+
+    let appData = JSON.parse(localStorage.getItem("focusOS_data")) || defaultData;
+    let currentPeriod = "daily";
+
+    function saveData() {
+      localStorage.setItem("focusOS_data", JSON.stringify(appData));
+    }
+
+    // --- IMPOSTAZIONE DATA ---
+    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+    document.getElementById("currentDateLabel").textContent = new Date().toLocaleDateString('it-IT', options);
+
+    // --- NAVIGAZIONE TAB BAR ---
+    function switchTab(tab, btn) {
+      document.querySelectorAll(".tab-item").forEach(el => el.classList.remove("active"));
+      btn.classList.add("active");
+
+      document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+      if (tab === "habits") {
+        document.getElementById("page-habits").classList.add("active");
+        document.getElementById("pageTitle").textContent = "Obiettivi & Abitudini";
+      } else {
+        document.getElementById("page-studio").classList.add("active");
+        document.getElementById("pageTitle").textContent = "Studio & Pomodoro";
+      }
+    }
+
+    // --- CAMBIO PERIODO (GIORNO / SETTIMANA / MESE) ---
+    function switchPeriod(period, btn) {
+      currentPeriod = period;
+      document.querySelectorAll("#page-habits .segment-btn").forEach(el => el.classList.remove("active"));
+      btn.classList.add("active");
+
+      const titles = {
+        daily: "Tracciamento Giornaliero (Settimana Corrente)",
+        weekly: "Obiettivi Settimanali del Mese",
+        monthly: "Traguardi Mensili"
+      };
+      const chartTitles = {
+        daily: "Andamento Giornaliero (Lun-Dom)",
+        weekly: "Andamento Settimanale (Sett 1-4)",
+        monthly: "Completamento Obiettivi Mensili"
+      };
+
+      document.getElementById("tableTitle").textContent = titles[period];
+      document.getElementById("barChartTitle").textContent = chartTitles[period];
+      renderAll();
+    }
+
+    // --- RENDERING TABELLA E GRAFICI ---
+    function renderAll() {
+      renderTable();
+      renderRings();
+      renderBarChart();
+      document.getElementById("pomodoroCount").textContent = appData.pomodorosCompleted || 0;
+    }
+
+    function renderTable() {
+      const section = appData[currentPeriod];
+      const thead = document.getElementById("tableHead");
+      const tbody = document.getElementById("tableBody");
+
+      // Header
+      let headHTML = `<tr><th>Abitudine / Obiettivo</th>`;
+      section.columns.forEach(col => {
+        headHTML += `<th>${col}</th>`;
+      });
+      headHTML += `<th>Progresso</th></tr>`;
+      thead.innerHTML = headHTML;
+
+      // Body
+      tbody.innerHTML = "";
+      section.items.forEach((item, rowIndex) => {
+        const doneCount = item.checks.filter(Boolean).length;
+        const pct = Math.round((doneCount / section.columns.length) * 100);
+
+        let rowHTML = `<tr>
+          <td>
+            ${item.name}
+            <button class="delete-btn" title="Elimina" onclick="deleteHabit(${rowIndex})">✕</button>
+          </td>`;
+
+        item.checks.forEach((checked, colIndex) => {
+          rowHTML += `<td>
+            <input type="checkbox" class="ios-check" ${checked ? "checked" : ""} 
+              onchange="toggleCheck(${rowIndex}, ${colIndex})" />
+          </td>`;
+        });
+
+        rowHTML += `<td><span class="progress-pill">${pct}%</span></td></tr>`;
+        tbody.innerHTML += rowHTML;
+      });
+    }
+
+    function toggleCheck(rowIndex, colIndex) {
+      const item = appData[currentPeriod].items[rowIndex];
+      item.checks[colIndex] = !item.checks[colIndex];
+      saveData();
+      renderAll();
+    }
+
+    function addHabit() {
+      const input = document.getElementById("newHabitInput");
+      const name = input.value.trim();
+      if (!name) return;
+
+      const colsCount = appData[currentPeriod].columns.length;
+      appData[currentPeriod].items.push({
+        name: name,
+        checks: new Array(colsCount).fill(false)
+      });
+
+      input.value = "";
+      saveData();
+      renderAll();
+    }
+
+    function deleteHabit(index) {
+      appData[currentPeriod].items.splice(index, 1);
+      saveData();
+      renderAll();
+    }
+
+    function calcPeriodPercentage(periodKey) {
+      const section = appData[periodKey];
+      if (!section.items.length) return 0;
+      let total = 0;
+      let checked = 0;
+      section.items.forEach(item => {
+        item.checks.forEach(val => {
+          total++;
+          if (val) checked++;
+        });
+      });
+      return total === 0 ? 0 : Math.round((checked / total) * 100);
+    }
+
+    function renderRings() {
+      const circumference = 201; // 2 * PI * 32
+      ["daily", "weekly", "monthly"].forEach(key => {
+        const pct = calcPeriodPercentage(key);
+        const offset = circumference - (pct / 100) * circumference;
+        document.getElementById(`ring-${key}`).style.strokeDashoffset = offset;
+        document.getElementById(`ring-${key}-val`).textContent = `${pct}%`;
+      });
+    }
+
+    function renderBarChart() {
+      const container = document.getElementById("barChartContainer");
+      const section = appData[currentPeriod];
+      container.innerHTML = "";
+
+      section.columns.forEach((colName, colIndex) => {
+        let totalRows = section.items.length;
+        let doneInCol = 0;
+        section.items.forEach(item => {
+          if (item.checks[colIndex]) doneInCol++;
+        });
+        const pct = totalRows === 0 ? 0 : Math.round((doneInCol / totalRows) * 100);
+
+        container.innerHTML += `
+          <div class="bar-col">
+            <div class="bar-track">
+              <div class="bar-fill" style="height: ${pct}%"></div>
+            </div>
+            <span class="bar-day">${colName}</span>
+          </div>
+        `;
+      });
+    }
+
+    // --- LOGICA STUDIO / POMODORO TIMER ---
+    let timerMode = "work"; // 'work' | 'short' | 'long'
+    let durations = { work: 25, short: 5, long: 15 };
+    let totalSeconds = durations.work * 60;
+    let remainingSeconds = totalSeconds;
+    let timerInterval = null;
+    let isRunning = false;
+
+    function updateDurations() {
+      durations.work = Math.max(1, parseInt(document.getElementById("inputWork").value) || 25);
+      durations.short = Math.max(1, parseInt(document.getElementById("inputShort").value) || 5);
+      durations.long = Math.max(1, parseInt(document.getElementById("inputLong").value) || 15);
+      if (!isRunning) {
+        setPomodoroMode(timerMode);
+      }
+    }
+
+    function setPomodoroMode(mode) {
+      pauseTimer();
+      timerMode = mode;
+      document.querySelectorAll("#page-studio .segment-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById(`mode-${mode}`).classList.add("active");
+
+      totalSeconds = durations[mode] * 60;
+      remainingSeconds = totalSeconds;
+
+      const ring = document.getElementById("timerRing");
+      const status = document.getElementById("timerStatus");
+
+      if (mode === "work") {
+        ring.style.stroke = "var(--orange)";
+        status.textContent = "Sessione di Concentrazione";
+      } else if (mode === "short") {
+        ring.style.stroke = "var(--green)";
+        status.textContent = "Pausa Breve Rilassante";
+      } else {
+        ring.style.stroke = "var(--blue)";
+        status.textContent = "Pausa Lunga Rigenerante";
+      }
+
+      updateTimerUI();
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      isRunning = true;
+      document.getElementById("startPauseBtn").textContent = "Pausa";
+      timerInterval = setInterval(() => {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+          updateTimerUI();
+        } else {
+          completePomodoroSession();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      isRunning = false;
+      clearInterval(timerInterval);
+      document.getElementById("startPauseBtn").textContent = "Avvia";
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      remainingSeconds = totalSeconds;
+      updateTimerUI();
+    }
+
+    function updateTimerUI() {
+      const mins = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
+      const secs = (remainingSeconds % 60).toString().padStart(2, "0");
+      document.getElementById("timerDigits").textContent = `${mins}:${secs}`;
+
+      const circumference = 728.8; // 2 * PI * 116
+      const progress = (totalSeconds - remainingSeconds) / totalSeconds;
+      document.getElementById("timerRing").style.strokeDashoffset = circumference * progress;
+    }
+
+    function playAppleChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [523.25, 659.25, 783.99, 1046.5]; // Accordo Do Maggiore
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.6);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.12);
+          osc.stop(ctx.currentTime + idx * 0.12 + 0.6);
+        });
+      } catch (e) {}
+    }
+
+    function completePomodoroSession() {
+      pauseTimer();
+      playAppleChime();
+
+      if (timerMode === "work") {
+        appData.pomodorosCompleted = (appData.pomodorosCompleted || 0) + 1;
+        saveData();
+        document.getElementById("pomodoroCount").textContent = appData.pomodorosCompleted;
+        alert("Ottimo lavoro! Sessione di studio conclusa. È il momento di una pausa!");
+        setPomodoroMode("short");
+      } else {
+        alert("Pausa terminata! Pronto per ricominciare a studiare?");
+        setPomodoroMode("work");
+      }
+    }
+
+    // Avvio iniziale
+    renderAll();
+    updateTimerUI();
+  </script>
+</body>
+</html>
